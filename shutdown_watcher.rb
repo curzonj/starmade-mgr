@@ -17,9 +17,8 @@ if count == 0
   ]).reservations.first.instances.first
 
 	ec2.associate_address(
-		dry_run: true,
 		instance_id: mgr_inst.instance_id,
 		public_ip: ip)
 
-	`shutdown -h now`
+	`sudo shutdown -h now`
 end

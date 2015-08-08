@@ -19,14 +19,19 @@ loop do
   ]).reservations.first.instances.first
 
 	if  game_inst.state.name == "stopped"
-		ec2.start_instances(instance_ids: [ game_inst.instance_id ])
+puts "launching #{game_inst.instance_id}"
+		resp = ec2.start_instances(instance_ids: [ game_inst.instance_id ])
+puts resp.inspect
 
 		begin
+puts 'sleeping'
 			sleep 10
 			ip = Net::HTTP.get(URI.parse("http://169.254.169.254/latest/meta-data/public-ipv4"))
-			ec2.associate_address(
-				instance_id: mgr_inst.instance_id,
+puts "moving #{ip}"
+			resp = ec2.associate_address(
+				instance_id: game_inst.instance_id,
 				public_ip: ip)
+puts resp.inspect
 		rescue
 			puts $!.inspect
 			puts $!.backtrace.join("\n")
